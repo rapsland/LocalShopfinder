@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="purple_500">#6200EE</color>
-    <string name="app_name">LocalShopfinder</string>
-    <style name="Theme.LocalShopfinder" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-    </style>
-</resources>
