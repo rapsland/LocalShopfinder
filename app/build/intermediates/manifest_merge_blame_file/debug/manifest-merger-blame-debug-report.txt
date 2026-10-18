@@ -1,0 +1,100 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.localshopfinder.app"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="33" />
+10
+11    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+11-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:4:5-79
+11-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:4:22-76
+12    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+12-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:5:5-81
+12-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:5:22-78
+13    <uses-permission android:name="android.permission.INTERNET" />
+13-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:6:5-67
+13-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:6:22-64
+14
+15    <permission
+15-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+16        android:name="com.localshopfinder.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="com.localshopfinder.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:8:5-20:19
+22        android:allowBackup="true"
+22-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:9:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.9.0] /home/rapsland/.gradle/caches/8.13/transforms/593718d07e7e6611757e17fea594e377/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+24        android:debuggable="true"
+25        android:extractNativeLibs="false"
+26        android:label="LocalShopfinder"
+26-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:10:9-40
+27        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" >
+27-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:11:9-77
+28        <activity
+28-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:12:9-19:20
+29            android:name="com.localshopfinder.app.MainActivity"
+29-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:13:13-41
+30            android:exported="true" >
+30-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:14:13-36
+31            <intent-filter>
+31-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:15:13-18:29
+32                <action android:name="android.intent.action.MAIN" />
+32-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:16:17-69
+32-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:16:25-66
+33
+34                <category android:name="android.intent.category.LAUNCHER" />
+34-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:17:17-77
+34-->/home/rapsland/Projects/LocalShopfinder/app/src/main/AndroidManifest.xml:17:27-74
+35            </intent-filter>
+36        </activity>
+37        <activity
+37-->[com.google.android.gms:play-services-base:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/f15bda51541410f1d28e83706a4fa905/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:20:9-22:45
+38            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+38-->[com.google.android.gms:play-services-base:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/f15bda51541410f1d28e83706a4fa905/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:20:19-85
+39            android:exported="false"
+39-->[com.google.android.gms:play-services-base:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/f15bda51541410f1d28e83706a4fa905/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:22:19-43
+40            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+40-->[com.google.android.gms:play-services-base:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/f15bda51541410f1d28e83706a4fa905/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:21:19-78
+41
+42        <meta-data
+42-->[com.google.android.gms:play-services-basement:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/4f71bcc4536021a589eb843c02a74d9b/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+43            android:name="com.google.android.gms.version"
+43-->[com.google.android.gms:play-services-basement:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/4f71bcc4536021a589eb843c02a74d9b/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+44            android:value="@integer/google_play_services_version" />
+44-->[com.google.android.gms:play-services-basement:18.1.0] /home/rapsland/.gradle/caches/8.13/transforms/4f71bcc4536021a589eb843c02a74d9b/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+45
+46        <provider
+46-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+47            android:name="androidx.startup.InitializationProvider"
+47-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:25:13-67
+48            android:authorities="com.localshopfinder.app.androidx-startup"
+48-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:26:13-68
+49            android:exported="false" >
+49-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:27:13-37
+50            <meta-data
+50-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+51                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+51-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:30:17-75
+52                android:value="androidx.startup" />
+52-->[androidx.emoji2:emoji2:1.2.0] /home/rapsland/.gradle/caches/8.13/transforms/03f8da8d0228793f6ce41d71ab537e9f/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:31:17-49
+53            <meta-data
+53-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/rapsland/.gradle/caches/8.13/transforms/1d268d018626b525c75782c2c80178aa/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+54                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+54-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/rapsland/.gradle/caches/8.13/transforms/1d268d018626b525c75782c2c80178aa/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+55                android:value="androidx.startup" />
+55-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/rapsland/.gradle/caches/8.13/transforms/1d268d018626b525c75782c2c80178aa/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+56        </provider>
+57    </application>
+58
+59</manifest>
