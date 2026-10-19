@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -148,7 +149,7 @@ class MainActivity : AppCompatActivity() {
             val bbox = String.format(Locale.ROOT, "%.6f,%.6f,%.6f,%.6f", south, west, north, east)
 
             val retailerRegex = "REWE|Netto|Lidl|ALDI|Aldi|PENNY|Kaufland|EDEKA|Marktkauf|Norma|Combi|famila|Nahkauf|Tegut|Migros|Carrefour|BİM|Bim|Şok|A101|Dia|Eroski|Mercadona|Supercor|Consum|El Corte Inglés|Auchan|Intermarché|Leader Price|Monoprix|Franprix|Casino|Super U|U Express|Hyper U|Sainsbury's|Tesco|Asda|Morrisons|Waitrose|Co-op|Aldi UK|Lidl GB|Trader Joe's|Whole Foods|Kroger|Safeway|Publix|Wegmans|Target|Walmart|Migros Ticaret|A101 Yeni Mağazacılık|Şok Marketler|Hakmar|Tarım Kredi|Macrocenter|Şok|Migros Jet|Tansas|Tansaş|Supermarket|Supermercato|Supermercado|Grocery|Groceries|Epicerie|Epiceria|Bakkal|Market"
-            val query = "[out:json][timeout:20];(" +
+            val query = "[out:json][timeout:10];(" +
                     "nwr[\"shop\"~\"^(supermarket|discount_store|convenience|department_store|grocery|greengrocer|general)$\"]($bbox);" +
                     "nwr[\"brand\"~\"$retailerRegex\",i]($bbox);" +
                     "nwr[\"name\"~\"$retailerRegex\",i]($bbox);" +
@@ -158,63 +159,64 @@ class MainActivity : AppCompatActivity() {
             val body = "data=" + URLEncoder.encode(query, "UTF-8")
             val endpoints = listOf(
                 "https://overpass-api.de/api/interpreter",
-                "https://lz4.overpass-api.de/api/interpreter",
-                "https://z.overpass-api.de/api/interpreter"
+                "https://lz4.overpass-api.de/api/interpreter"
             )
 
-            var foundStores = mutableListOf<ShopItem>()
-            for (endpoint in endpoints) {
-                try {
-                    val conn = (URL(endpoint).openConnection() as HttpURLConnection).apply {
-                        requestMethod = "POST"
-                        doOutput = true
-                        connectTimeout = 5000
-                        readTimeout = 8000
-                        setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-                        setRequestProperty("User-Agent", "LocalShopfinder/1.0 (Android)")
-                    }
-                    conn.outputStream.buffered().use { it.write(body.toByteArray()) }
-                    if (conn.responseCode == 200) {
-                        val jsonStr = conn.inputStream.bufferedReader().use { it.readText() }
-                        val root = JSONObject(jsonStr)
-                        val elements = root.optJSONArray("elements")
-                        if (elements != null) {
-                            for (i in 0 until elements.length()) {
-                                val el = elements.optJSONObject(i) ?: continue
-                                val tags = el.optJSONObject("tags") ?: continue
-                                val name = tags.optString("name").takeIf { it.isNotBlank() }
-                                    ?: tags.optString("brand").takeIf { it.isNotBlank() }
-                                    ?: tags.optString("operator").takeIf { it.isNotBlank() }
-                                    ?: "Supermarket"
-                                val brand = tags.optString("brand").takeIf { it.isNotBlank() && it != "null" } ?: name
-                                val center = el.optJSONObject("center")
-                                val eLat = center?.optDouble("lat", 0.0) ?: el.optDouble("lat", 0.0)
-                                val eLon = center?.optDouble("lon", 0.0) ?: el.optDouble("lon", 0.0)
-                                if (eLat != 0.0 && eLon != 0.0) {
-                                    val results = FloatArray(1)
-                                    Location.distanceBetween(selectedLat, selectedLon, eLat, eLon, results)
-                                    val dist = results[0]
-                                    if (dist <= radiusMeters) {
-                                        foundStores.add(ShopItem(name, brand, eLat, eLon, dist))
+            val deferredOverpass = endpoints.map { endpoint ->
+                scope.async(Dispatchers.IO) {
+                    val foundStores = mutableListOf<ShopItem>()
+                    try {
+                        val conn = (URL(endpoint).openConnection() as HttpURLConnection).apply {
+                            requestMethod = "POST"
+                            doOutput = true
+                            connectTimeout = 3000
+                            readTimeout = 5000
+                            setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                            setRequestProperty("User-Agent", "LocalShopfinder/1.1 (Android)")
+                        }
+                        conn.outputStream.buffered().use { it.write(body.toByteArray()) }
+                        if (conn.responseCode == 200) {
+                            val jsonStr = conn.inputStream.bufferedReader().use { it.readText() }
+                            val root = JSONObject(jsonStr)
+                            val elements = root.optJSONArray("elements")
+                            if (elements != null) {
+                                for (i in 0 until elements.length()) {
+                                    val el = elements.optJSONObject(i) ?: continue
+                                    val tags = el.optJSONObject("tags") ?: continue
+                                    val name = tags.optString("name").takeIf { it.isNotBlank() }
+                                        ?: tags.optString("brand").takeIf { it.isNotBlank() }
+                                        ?: tags.optString("operator").takeIf { it.isNotBlank() }
+                                        ?: "Supermarket"
+                                    val brand = tags.optString("brand").takeIf { it.isNotBlank() && it != "null" } ?: name
+                                    val center = el.optJSONObject("center")
+                                    val eLat = center?.optDouble("lat", 0.0) ?: el.optDouble("lat", 0.0)
+                                    val eLon = center?.optDouble("lon", 0.0) ?: el.optDouble("lon", 0.0)
+                                    if (eLat != 0.0 && eLon != 0.0) {
+                                        val results = FloatArray(1)
+                                        Location.distanceBetween(selectedLat, selectedLon, eLat, eLon, results)
+                                        val dist = results[0]
+                                        if (dist <= radiusMeters) {
+                                            foundStores.add(ShopItem(name, brand, eLat, eLon, dist))
+                                        }
                                     }
                                 }
                             }
                         }
-                        if (foundStores.isNotEmpty()) break
-                    }
-                } catch (_: Exception) {}
+                    } catch (_: Exception) {}
+                    foundStores
+                }
             }
 
-            // Fallback to Photon if Overpass returns nothing or very few stores (< 5)
-            if (foundStores.size < 5) {
-                val genericTerms = listOf("supermarket", "grocery", "market", "food")
+            val deferredPhoton = scope.async(Dispatchers.IO) {
+                val foundStores = mutableListOf<ShopItem>()
+                val genericTerms = listOf("supermarket", "grocery")
                 for (term in genericTerms) {
                     try {
-                        val url = URL("https://photon.komoot.io/api/?q=${URLEncoder.encode(term, "UTF-8")}&lat=$selectedLat&lon=$selectedLon&limit=25")
+                        val url = URL("https://photon.komoot.io/api/?q=${URLEncoder.encode(term, "UTF-8")}&lat=$selectedLat&lon=$selectedLon&limit=15")
                         val conn = (url.openConnection() as HttpURLConnection).apply {
-                            connectTimeout = 3000
-                            readTimeout = 4000
-                            setRequestProperty("User-Agent", "LocalShopfinder/1.0")
+                            connectTimeout = 2000
+                            readTimeout = 3000
+                            setRequestProperty("User-Agent", "LocalShopfinder/1.1")
                         }
                         if (conn.responseCode == 200) {
                             val text = conn.inputStream.bufferedReader().use { it.readText() }
@@ -223,8 +225,6 @@ class MainActivity : AppCompatActivity() {
                                 for (i in 0 until features.length()) {
                                     val f = features.optJSONObject(i) ?: continue
                                     val props = f.optJSONObject("properties") ?: continue
-                                    val osmValue = props.optString("osm_value", "")
-                                    val osmKey = props.optString("osm_key", "")
                                     val geom = f.optJSONObject("geometry") ?: continue
                                     val coords = geom.optJSONArray("coordinates") ?: continue
                                     val sLon = coords.optDouble(0, 0.0)
@@ -243,9 +243,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     } catch (_: Exception) {}
                 }
+                foundStores
             }
 
-            val sortedStores = foundStores.distinctBy { "${it.name}_${it.lat}_${it.lon}" }.sortedBy { it.distanceMeters }
+            val foundStores = (deferredOverpass.awaitAll().flatten() + deferredPhoton.await()).distinctBy { "${it.name}_${it.lat}_${it.lon}" }
 
             withContext(Dispatchers.Main) {
                 if (sortedStores.isEmpty()) {
